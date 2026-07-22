@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50 text-slate-800">
+<html lang="en" class="h-full bg-slate-50/70 text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OmniCX - Voice Control Hub</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -17,9 +22,9 @@
                         mono: ['JetBrains Mono', 'monospace']
                     },
                     colors: {
-                        brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
-                        agentic: { 500: '#a855f7', 600: '#9333ea' },
-                        accent: { 500: '#10b981', 600: '#059669' }
+                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
+                        agentic: { 50: '#faf5ff', 500: '#a855f7', 600: '#9333ea' },
+                        accent: { 50: '#ecfdf5', 500: '#10b981', 600: '#059669' }
                     }
                 }
             }
@@ -29,14 +34,41 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .light-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05); }
-        .active-tab { background: #e0e7ff; border-color: #6366f1; color: #4338ca; font-weight: 600; }
-        .log-modal-tab-active { border-bottom: 2px solid #4f46e5; color: #4f46e5; font-weight: 700; }
+        
+        .light-card { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02); 
+            border-radius: 1rem;
+        }
+        
+        .light-card-interactive {
+            transition: all 0.2s ease-in-out;
+        }
+        .light-card-interactive:hover {
+            border-color: #6366f1;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.08), 0 4px 6px -4px rgba(99, 102, 241, 0.03);
+            transform: translateY(-2px);
+        }
+
+        .active-tab { 
+            background: #e0e7ff; 
+            border-color: #6366f1; 
+            color: #4338ca; 
+            font-weight: 700; 
+        }
+
+        .log-modal-tab-active { 
+            border-bottom: 2px solid #4f46e5; 
+            color: #4f46e5; 
+            font-weight: 700; 
+            background-color: #ffffff;
+        }
     </style>
 </head>
-<body class="h-full font-sans antialiased overflow-hidden flex flex-col bg-slate-50 text-slate-800">
+<body class="h-full font-sans antialiased overflow-hidden flex flex-col bg-slate-50/70 text-slate-800">
 
-    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 z-30 shadow-sm">
+    <header class="h-16 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between shrink-0 z-30 shadow-xs">
         <div class="flex items-center space-x-3">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
                 <i data-lucide="bot" class="w-5 h-5 text-white"></i>
@@ -44,7 +76,7 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold text-base text-slate-900 tracking-tight">OmniCX <span class="text-indigo-600">Voice Hub</span></span>
-                    <span class="px-2 py-0.5 text-[10px] bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-full font-mono flex items-center gap-1 font-semibold">
+                    <span class="px-2 py-0.5 text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full font-mono flex items-center gap-1 font-semibold">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         Active Engine
                     </span>
@@ -53,7 +85,7 @@
         </div>
 
         <div class="flex items-center space-x-4">
-            <button onclick="showToast('Supervisor Live Assistance Active')" class="hidden md:flex px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs text-slate-700 transition items-center gap-2 font-medium">
+            <button onclick="showToast('Supervisor Live Assistance Active')" class="hidden md:flex px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 border border-slate-200/80 text-xs text-slate-700 transition items-center gap-2 font-medium">
                 <i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i>
                 <span>Supervisor On Duty</span>
             </button>
@@ -65,19 +97,19 @@
                     <div class="text-[10px] text-indigo-600 font-mono font-semibold">CX Operations Director</div>
                 </div>
                 <div class="relative group cursor-pointer">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center font-bold text-indigo-700 text-xs ring-2 ring-indigo-500/10">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200/80 flex items-center justify-center font-bold text-indigo-700 text-xs ring-2 ring-indigo-500/10 shadow-xs">
                         RK
                     </div>
-                    <div class="absolute right-0 top-11 w-52 bg-white border border-slate-200 rounded-xl shadow-xl p-2 hidden group-hover:block z-50 text-xs font-sans">
+                    <div class="absolute right-0 top-11 w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-2 hidden group-hover:block z-50 text-xs font-sans">
                         <div class="px-3 py-2 border-b border-slate-100">
                             <p class="font-bold text-slate-800">Rajesh Kumar</p>
                             <p class="text-[10px] text-slate-500">rajesh.kumar@omnicx.ai</p>
                         </div>
-                        <button onclick="switchTab('settings')" class="w-full text-left px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700 flex items-center gap-2 mt-1">
+                        <button onclick="switchTab('settings')" class="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg text-slate-700 flex items-center gap-2 mt-1 transition">
                             <i data-lucide="settings" class="w-3.5 h-3.5 text-indigo-600"></i>
                             <span>Account Settings</span>
                         </button>
-                        <button onclick="showToast('Logging out session...')" class="w-full text-left px-3 py-2 hover:bg-rose-50 text-rose-600 rounded-lg flex items-center gap-2">
+                        <button onclick="showToast('Session logged out')" class="w-full text-left px-3 py-2 hover:bg-rose-50 text-rose-600 rounded-lg flex items-center gap-2 transition">
                             <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                             <span>Sign Out</span>
                         </button>
@@ -89,7 +121,7 @@
 
     <div class="flex-1 flex overflow-hidden">
         
-        <aside class="w-60 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0">
+        <aside class="w-60 bg-white border-r border-slate-200/80 flex flex-col justify-between shrink-0 shadow-xs z-20">
             <div class="p-3 space-y-1">
                 <div class="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Main Menu</div>
                 
@@ -98,39 +130,39 @@
                     <span>Control Room</span>
                 </button>
 
-                <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent">
+                <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent">
                     <i data-lucide="phone-call" class="w-4 h-4"></i>
                     <span>Voice Call Simulator</span>
                 </button>
 
-                <button onclick="switchTab('logs')" id="nav-logs" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent">
+                <button onclick="switchTab('logs')" id="nav-logs" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                     <span>Call Logs & Audits</span>
                 </button>
 
-                <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent">
+                <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent">
                     <i data-lucide="git-branch" class="w-4 h-4"></i>
                     <span>Escalation Engine</span>
                 </button>
 
-                <button onclick="switchTab('prompts')" id="nav-prompts" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent">
+                <button onclick="switchTab('prompts')" id="nav-prompts" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent">
                     <i data-lucide="volume-2" class="w-4 h-4"></i>
                     <span>Voice Prompts</span>
                 </button>
 
-                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent">
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent">
                     <i data-lucide="sliders" class="w-4 h-4"></i>
                     <span>System Settings</span>
                 </button>
             </div>
 
-            <div class="p-3 border-t border-slate-200 bg-slate-50 text-[11px] text-slate-500 space-y-1 font-mono">
+            <div class="p-3 border-t border-slate-200/80 bg-slate-50/50 text-[11px] text-slate-500 space-y-1 font-mono">
                 <div class="flex justify-between"><span>Bot Engine:</span><span class="text-emerald-600 font-bold">Online</span></div>
                 <div class="flex justify-between"><span>Languages:</span><span class="text-slate-700 font-semibold">ENG / TAM / HIN</span></div>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 bg-slate-50">
+        <main class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6 bg-slate-50/70">
             
             <!-- TAB 1: CONTROL ROOM DASHBOARD -->
             <div id="tab-dashboard" class="tab-content space-y-6">
@@ -139,18 +171,18 @@
                         <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Operations Dashboard</h1>
                         <p class="text-xs text-slate-500">Real-time call deflection, resolution rates, and active grievance transfers (Click cards to view details)</p>
                     </div>
-                    <button onclick="showToast('Exporting shift summary PDF...')" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-indigo-600/20">
+                    <button onclick="showToast('Exporting shift summary PDF report...')" class="self-start sm:self-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm shadow-indigo-600/20">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
                         <span>Export Summary</span>
                     </button>
                 </div>
 
-                <!-- Clickable Dashlets -->
+                <!-- Clickable KPI Dashlets -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div onclick="switchTab('logs', 'bot_resolved')" class="light-card p-4 rounded-2xl cursor-pointer hover:border-indigo-500 hover:shadow-md transition group">
+                    <div onclick="switchTab('logs', 'bot_resolved')" class="light-card light-card-interactive p-4 cursor-pointer group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs text-slate-500 font-medium group-hover:text-indigo-600">Bot Resolution Rate</p>
+                                <p class="text-xs text-slate-500 font-medium group-hover:text-indigo-600 transition">Bot Resolution Rate</p>
                                 <h3 class="text-2xl font-extrabold text-slate-900 mt-1">78.4%</h3>
                                 <p class="text-[11px] text-emerald-600 mt-1 flex items-center gap-1 font-semibold">
                                     <i data-lucide="trending-up" class="w-3 h-3"></i> +22.1% automated
@@ -160,35 +192,35 @@
                                 <i data-lucide="bot" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between">
-                            <span>Click to view Bot Resolved logs</span>
+                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>View Bot Resolved logs</span>
                             <i data-lucide="chevron-right" class="w-3 h-3"></i>
                         </div>
                     </div>
 
-                    <div onclick="switchTab('simulator')" class="light-card p-4 rounded-2xl cursor-pointer hover:border-purple-500 hover:shadow-md transition group">
+                    <div onclick="switchTab('simulator')" class="light-card light-card-interactive p-4 cursor-pointer group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs text-slate-500 font-medium group-hover:text-purple-600">Active Channels</p>
+                                <p class="text-xs text-slate-500 font-medium group-hover:text-purple-600 transition">Active Channels</p>
                                 <h3 class="text-2xl font-extrabold text-slate-900 mt-1">42 <span class="text-xs text-slate-400 font-normal">/ 100</span></h3>
                                 <p class="text-[11px] text-indigo-600 mt-1 flex items-center gap-1 font-semibold">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> 38 Bot Active | 4 Human
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> 38 Bot | 4 Agent
                                 </p>
                             </div>
                             <div class="p-2.5 bg-purple-50 text-purple-600 rounded-xl border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition">
                                 <i data-lucide="phone-call" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between">
-                            <span>Click to open Call Simulator</span>
+                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>Open Call Simulator</span>
                             <i data-lucide="chevron-right" class="w-3 h-3"></i>
                         </div>
                     </div>
 
-                    <div onclick="switchTab('logs', 'fcr')" class="light-card p-4 rounded-2xl cursor-pointer hover:border-emerald-500 hover:shadow-md transition group">
+                    <div onclick="switchTab('logs', 'fcr')" class="light-card light-card-interactive p-4 cursor-pointer group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs text-slate-500 font-medium group-hover:text-emerald-600">First Contact Resolution</p>
+                                <p class="text-xs text-slate-500 font-medium group-hover:text-emerald-600 transition">First Contact Resolution</p>
                                 <h3 class="text-2xl font-extrabold text-slate-900 mt-1">86.5%</h3>
                                 <p class="text-[11px] text-emerald-600 mt-1 font-semibold flex items-center gap-1">
                                     <i data-lucide="check-circle-2" class="w-3 h-3"></i> High satisfaction
@@ -198,16 +230,16 @@
                                 <i data-lucide="zap" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between">
-                            <span>Click to inspect FCR metrics</span>
+                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>Inspect FCR metrics</span>
                             <i data-lucide="chevron-right" class="w-3 h-3"></i>
                         </div>
                     </div>
 
-                    <div onclick="switchTab('logs', 'sentiment')" class="light-card p-4 rounded-2xl cursor-pointer hover:border-amber-500 hover:shadow-md transition group">
+                    <div onclick="switchTab('logs', 'sentiment')" class="light-card light-card-interactive p-4 cursor-pointer group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-xs text-slate-500 font-medium group-hover:text-amber-600">CSAT Rating</p>
+                                <p class="text-xs text-slate-500 font-medium group-hover:text-amber-600 transition">CSAT Rating</p>
                                 <h3 class="text-2xl font-extrabold text-slate-900 mt-1">4.8 <span class="text-xs text-slate-400 font-normal">/ 5.0</span></h3>
                                 <p class="text-[11px] text-amber-600 mt-1 font-semibold flex items-center gap-1">
                                     <i data-lucide="star" class="w-3 h-3 fill-amber-500 text-amber-500"></i> Based on 2,840 calls
@@ -217,15 +249,15 @@
                                 <i data-lucide="smile" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between">
-                            <span>Click to view CSAT & Sentiment logs</span>
+                        <div class="text-[10px] text-slate-400 font-mono mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>View CSAT & Sentiment logs</span>
                             <i data-lucide="chevron-right" class="w-3 h-3"></i>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 light-card p-5 rounded-2xl">
+                    <div class="lg:col-span-2 light-card p-5">
                         <div class="flex items-center justify-between mb-3">
                             <div>
                                 <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -240,7 +272,7 @@
                         </div>
                     </div>
 
-                    <div class="light-card p-5 rounded-2xl flex flex-col justify-between">
+                    <div class="light-card p-5 flex flex-col justify-between">
                         <div>
                             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2 mb-1">
                                 <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i>
@@ -260,7 +292,7 @@
                     </div>
                 </div>
 
-                <div class="light-card p-5 rounded-2xl space-y-3">
+                <div class="light-card p-5 space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
                             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -275,7 +307,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div class="p-4 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-2">
                             <div class="flex items-center justify-between text-xs">
                                 <div class="flex items-center space-x-2">
                                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
@@ -284,18 +316,18 @@
                                 </div>
                                 <span class="px-2 py-0.5 text-[10px] bg-indigo-100 text-indigo-700 rounded border border-indigo-200 font-mono font-bold">Ticket INC-4412</span>
                             </div>
-                            <p class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200 font-mono">
+                            <p class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200/80 font-mono">
                                 Bot: "Your complaint status is Under Investigation (Age: 3 days)."
                             </p>
                             <div class="flex items-center justify-between text-xs pt-1">
                                 <span class="text-slate-500">Sentiment: <strong class="text-emerald-600 font-bold">Positive (+0.82)</strong></span>
-                                <button onclick="openLogModal(8941)" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-semibold rounded-md transition shadow-sm">
+                                <button onclick="openLogModal(8941)" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-semibold rounded-lg transition shadow-xs">
                                     Inspect Call Audit
                                 </button>
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div class="p-4 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-2">
                             <div class="flex items-center justify-between text-xs">
                                 <div class="flex items-center space-x-2">
                                     <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
@@ -304,12 +336,12 @@
                                 </div>
                                 <span class="px-2 py-0.5 text-[10px] bg-amber-100 text-amber-800 rounded border border-amber-300 font-mono font-bold">Age: 16 Days</span>
                             </div>
-                            <p class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200 font-mono">
+                            <p class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200/80 font-mono">
                                 Bot: "Ticket age exceeds SLA threshold. Escalating to Nodal Desk."
                             </p>
                             <div class="flex items-center justify-between text-xs pt-1">
                                 <span class="text-slate-500">Routing: <strong class="text-amber-700 font-bold">Nodal Desk Transfer</strong></span>
-                                <button onclick="openLogModal(8942)" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-semibold rounded-md transition shadow-sm">
+                                <button onclick="openLogModal(8942)" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-semibold rounded-lg transition shadow-xs">
                                     Inspect Call Audit
                                 </button>
                             </div>
@@ -324,7 +356,7 @@
                         <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Voice Call Simulator</h1>
                         <p class="text-xs text-slate-500">Test different customer journeys, MPIN verification, and automated routing</p>
                     </div>
-                    <button onclick="resetSimulator()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl border border-slate-300 transition shadow-sm">
+                    <button onclick="resetSimulator()" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl border border-slate-300 transition shadow-xs">
                         Reset Session
                     </button>
                 </div>
@@ -332,7 +364,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <!-- Controls -->
                     <div class="lg:col-span-5 space-y-4">
-                        <div class="light-card p-5 rounded-2xl space-y-4">
+                        <div class="light-card p-5 space-y-4">
                             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">Call Scenario Setup</h3>
 
                             <div class="space-y-1">
@@ -347,7 +379,7 @@
 
                             <div class="grid grid-cols-2 gap-3 text-xs">
                                 <div>
-                                    <label class="text-slate-600 font-semibold block mb-1">Target Desk Hotline</label>
+                                    <label class="text-slate-600 font-semibold block mb-1">Target Hotline</label>
                                     <select id="sim-dialed-number" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 text-slate-800 font-mono">
                                         <option value="+91 78456 39629">Nodal Desk (+91 78456 39629)</option>
                                         <option value="+91 73059 63580">GRO Desk (+91 73059 63580)</option>
@@ -386,7 +418,7 @@
 
                     <!-- Transcript Feed -->
                     <div class="lg:col-span-7 flex flex-col space-y-4">
-                        <div class="light-card p-5 rounded-2xl flex-1 flex flex-col justify-between min-h-[460px]">
+                        <div class="light-card p-5 flex-1 flex flex-col justify-between min-h-[460px]">
                             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                                 <div class="flex items-center space-x-3">
                                     <div id="call-status-indicator" class="w-3 h-3 rounded-full bg-slate-400"></div>
@@ -426,8 +458,8 @@
                     </div>
                     
                     <div class="flex items-center space-x-3">
-                        <div class="flex items-center space-x-2 bg-white border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-mono shadow-sm">
-                            <span class="text-slate-600 font-sans font-semibold">Sentiment Score:</span>
+                        <div class="flex items-center space-x-2 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl text-xs font-mono shadow-xs">
+                            <span class="text-slate-600 font-sans font-semibold">Sentiment Column:</span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="sentiment-toggle" checked onchange="toggleSentimentColumn(this.checked)" class="sr-only peer">
                                 <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
@@ -437,10 +469,10 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="light-card p-4 rounded-2xl flex flex-wrap gap-3 items-center justify-between text-xs font-mono">
+                <div class="light-card p-4 flex flex-wrap gap-3 items-center justify-between text-xs font-mono">
                     <div class="flex flex-wrap items-center gap-3">
-                        <input type="text" id="log-search" oninput="filterCallLogs()" placeholder="Search by Ticket ID or Mobile Number..." class="bg-slate-50 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl w-64 focus:outline-none focus:border-indigo-500 font-sans">
-                        <select id="log-outcome-filter" onchange="filterCallLogs()" class="bg-slate-50 border border-slate-300 text-slate-700 px-3 py-2 rounded-xl font-sans font-medium">
+                        <input type="text" id="log-search" oninput="filterCallLogs()" placeholder="Search by Ticket ID or Mobile Number..." class="bg-slate-50/80 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl w-64 focus:outline-none focus:bg-white focus:border-indigo-500 font-sans">
+                        <select id="log-outcome-filter" onchange="filterCallLogs()" class="bg-slate-50/80 border border-slate-300 text-slate-700 px-3 py-2 rounded-xl font-sans font-medium focus:outline-none focus:bg-white">
                             <option value="all">All Outcomes</option>
                             <option value="Bot Resolved">Bot Closed</option>
                             <option value="Agent Transfer">Agent Transfer</option>
@@ -452,10 +484,10 @@
                 </div>
 
                 <!-- Call Logs Table -->
-                <div class="light-card rounded-2xl overflow-hidden">
+                <div class="light-card overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-100 text-slate-600 font-mono uppercase text-[10px] border-b border-slate-200">
+                            <thead class="bg-slate-100/80 text-slate-600 font-mono uppercase text-[10px] border-b border-slate-200">
                                 <tr>
                                     <th class="p-3.5">Call ID & CLI</th>
                                     <th class="p-3.5">Target Hotline</th>
@@ -467,7 +499,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 font-mono text-slate-700" id="call-logs-table-body">
-                                <!-- Rendered dynamically by JS -->
+                                <!-- Rendered dynamically -->
                             </tbody>
                         </table>
                     </div>
@@ -480,4 +512,1259 @@
                         <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Escalation Engine</h1>
                         <p class="text-xs text-slate-500">Configure universal tier thresholds, client-specific hotlines, and automated AI deflection paths</p>
                     </div>
-                    <div class="flex items-center space-x
+                    <div class="flex items-center space-x-3">
+                        <select id="client-preset-select" onchange="applyClientPreset(this.value)" class="bg-white border border-slate-300 text-xs text-indigo-700 font-mono font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500 shadow-xs">
+                            <option value="bfsi">Preset: BFSI / Financial Services (+91 Hotlines)</option>
+                            <option value="generic">Preset: Generic Enterprise Template (+91 Hotlines)</option>
+                            <option value="telecom">Preset: Telecom & Utility Services (+91 Hotlines)</option>
+                            <option value="custom">Preset: Custom Client Profile (+91 Hotlines)</option>
+                        </select>
+                        <button onclick="saveRuleset()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
+                            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                            <span>Save Ruleset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Escalation Matrix Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="light-card p-5 space-y-4">
+                        <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+                            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100">
+                                <i data-lucide="headset" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-mono text-indigo-600 font-bold uppercase tracking-wider">Level 1 Escalation</span>
+                                <h3 class="text-sm font-bold text-slate-900">Frontline Support Desk</h3>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="space-y-1">
+                                <label class="text-slate-600 font-semibold block font-mono">Target Hotline / DID (+91)</label>
+                                <input type="text" id="tier1-hotline" value="+91 1800 200 1122" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-slate-800">
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                                <div class="font-bold text-slate-800">Ticket Status Condition</div>
+                                <p class="text-slate-600 font-mono">No open ticket found in CRM OR Ticket Age &lt; Level 2 SLA threshold.</p>
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                                <div class="font-bold text-slate-800">AI Bot Action</div>
+                                <p class="text-slate-600 font-mono">Announce current status update and transfer call to General Service Queue if customer requests human agent.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="light-card p-5 space-y-4">
+                        <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+                            <div class="p-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-100">
+                                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-mono text-amber-600 font-bold uppercase tracking-wider">Level 2 Escalation</span>
+                                <h3 class="text-sm font-bold text-slate-900">Grievance Redressal (GRO)</h3>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="space-y-1">
+                                <label class="text-slate-600 font-semibold block font-mono">Target Hotline / DID (+91)</label>
+                                <input type="text" id="tier2-hotline" value="+91 73059 63580" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-slate-800">
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-slate-800">SLA Trigger Threshold:</span>
+                                    <div class="flex items-center space-x-1">
+                                        <input type="number" id="tier2-threshold" value="7" class="w-14 bg-white border border-slate-300 rounded-lg px-2 py-1 text-center font-bold text-amber-700 font-mono">
+                                        <span class="text-slate-500 font-mono">Days</span>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 font-mono">Ticket Age &ge; Threshold OR Escalation Flag is active.</p>
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                                <div class="font-bold text-slate-800">AI Bot Action</div>
+                                <p class="text-slate-600 font-mono">Attempt AI automated resolution. If unresolved or customer requests supervisor, transfer directly to Level 2 GRO Desk.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="light-card p-5 space-y-4">
+                        <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+                            <div class="p-2 bg-purple-50 text-purple-600 rounded-xl border border-purple-100">
+                                <i data-lucide="building-2" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-mono text-purple-600 font-bold uppercase tracking-wider">Level 3 Escalation</span>
+                                <h3 class="text-sm font-bold text-slate-900">Nodal / Appellate Officer</h3>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="space-y-1">
+                                <label class="text-slate-600 font-semibold block font-mono">Target Hotline / DID (+91)</label>
+                                <input type="text" id="tier3-hotline" value="+91 78456 39629" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-slate-800">
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-slate-800">SLA Trigger Threshold:</span>
+                                    <div class="flex items-center space-x-1">
+                                        <input type="number" id="tier3-threshold" value="15" class="w-14 bg-white border border-slate-300 rounded-lg px-2 py-1 text-center font-bold text-purple-700 font-mono">
+                                        <span class="text-slate-500 font-mono">Days</span>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 font-mono">Ticket tagged Level 2 &amp; Age &ge; Threshold.</p>
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                                <div class="font-bold text-slate-800">AI Bot Action</div>
+                                <p class="text-slate-600 font-mono">Priority route to Executive Nodal Desk with full interaction history payload.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="light-card p-5 space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 font-mono flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-indigo-600"></i>
+                        <span>After-Hours &amp; Schedule Execution Policy</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                            <label class="font-bold text-slate-800 block">Working Operating Hours</label>
+                            <div class="flex items-center space-x-2 font-mono">
+                                <input type="time" value="09:30" class="bg-white border border-slate-300 text-slate-800 rounded-lg px-2 py-1 w-full text-center font-semibold">
+                                <span class="text-slate-400">to</span>
+                                <input type="time" value="18:00" class="bg-white border border-slate-300 text-slate-800 rounded-lg px-2 py-1 w-full text-center font-semibold">
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                            <label class="font-bold text-slate-800 block">After-Hours Routing Behavior</label>
+                            <select class="w-full bg-white border border-slate-300 text-slate-800 rounded-lg p-1.5 font-mono text-xs">
+                                <option value="callback">Play Hours Notice + Schedule Next-Day Callback</option>
+                                <option value="voicemail">Play Notice + Record Audio Grievance Voicemail</option>
+                                <option value="self_service">Allow Self-Service Ticket Check Only</option>
+                            </select>
+                        </div>
+
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                            <label class="font-bold text-slate-800 block">Spam &amp; Repeat Call Filtering</label>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-slate-600 font-mono">AI Junk Detection:</span>
+                                <span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 border border-emerald-300 rounded text-[10px] font-mono font-bold">Enabled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-prompts" class="tab-content hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Voice Script Library</h1>
+                        <p class="text-xs text-slate-500">Interactive voice prompt auditioning (Prompts 1-36)</p>
+                    </div>
+                    <select id="prompt-lang-filter" onchange="filterPrompts(this.value)" class="bg-white border border-slate-300 text-xs text-slate-700 font-semibold rounded-xl px-3 py-2 font-mono shadow-xs">
+                        <option value="all">All Languages</option>
+                        <option value="English">English</option>
+                        <option value="Tamil">Tamil (தமிழ்)</option>
+                        <option value="Hindi">Hindi (हिंदी)</option>
+                    </select>
+                </div>
+
+                <div class="light-card overflow-hidden">
+                    <div class="divide-y divide-slate-100 max-h-[580px] overflow-y-auto custom-scrollbar" id="prompts-list">
+                        <!-- Prompts rendered via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-settings" class="tab-content hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Contact Center Settings</h1>
+                        <p class="text-xs text-slate-500">Manage LLM reasoning models, voice synthesis engines, telemetry webhooks, and concurrency guardrails</p>
+                    </div>
+                    <button onclick="saveSettings()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
+                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        <span>Apply Configurations</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="light-card p-5 space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 font-mono flex items-center gap-2">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                            <span>LLM &amp; Reasoning Engine</span>
+                        </h3>
+
+                        <div class="space-y-3 text-xs font-mono">
+                            <div>
+                                <label class="text-slate-600 font-semibold block mb-1">Primary Voice LLM Model</label>
+                                <select class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2">
+                                    <option value="gemini-3-flash-preview">Gemini 3 Flash (Sub 300ms Latency - Recommended)</option>
+                                    <option value="gemini-3.1-flash-live-preview">Gemini 3.1 Flash Live (Native Audio Stream)</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-slate-600 font-semibold block mb-1">Temperature</label>
+                                    <input type="number" step="0.1" value="0.2" class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2 text-center font-bold">
+                                </div>
+                                <div>
+                                    <label class="text-slate-600 font-semibold block mb-1">Max Token Budget</label>
+                                    <input type="number" value="512" class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2 text-center font-bold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="light-card p-5 space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-purple-600 font-mono flex items-center gap-2">
+                            <i data-lucide="mic" class="w-4 h-4"></i>
+                            <span>Voice Speech &amp; Accent Profile</span>
+                        </h3>
+
+                        <div class="space-y-3 text-xs font-mono">
+                            <div>
+                                <label class="text-slate-600 font-semibold block mb-1">TTS Voice Model</label>
+                                <select class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2">
+                                    <option value="gemini-2.5-flash-preview-tts">Gemini TTS (PCM 16-bit 24kHz)</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-slate-600 font-semibold block mb-1">Voice Accent</label>
+                                    <select class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2">
+                                        <option value="indian_en">Indian English (Clear)</option>
+                                        <option value="tamil_accent">Tamil (Regional Accent)</option>
+                                        <option value="hindi_accent">Hindi (Regional Accent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-slate-600 font-semibold block mb-1">Preset Voice Name</label>
+                                    <select class="w-full bg-slate-50 border border-slate-300 text-slate-800 rounded-xl p-2">
+                                        <option value="Kore">Kore (Warm / Professional)</option>
+                                        <option value="Puck">Puck (Upbeat)</option>
+                                        <option value="Zephyr">Zephyr (Bright)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="log-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 hidden">
+        <div class="bg-white border border-slate-200/90 rounded-2xl w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden shadow-2xl font-sans">
+            
+            <!-- Modal Top Bar -->
+            <div class="px-6 py-3.5 bg-slate-100/90 border-b border-slate-200/80 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-2">
+                    <span class="text-slate-500 font-mono">Call ID:</span>
+                    <span class="font-mono text-slate-900 font-bold" id="modal-call-uuid">f5daa2c34bf4488b9df0764119a74d96</span>
+                    <button onclick="copyCallId()" title="Copy Call ID" class="p-1 hover:bg-slate-200 rounded text-slate-500 hover:text-slate-900 transition">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+                <button onclick="closeLogModal()" class="p-1.5 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-200 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Call Summary Strip & Dual-Track Audio Waveform Player -->
+            <div class="p-5 bg-slate-50/80 border-b border-slate-200/80 space-y-4">
+                <!-- Summary Metrics -->
+                <div class="flex flex-wrap items-center justify-between text-xs font-mono gap-3">
+                    <div class="flex items-center space-x-2 text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-md font-semibold">
+                        <i data-lucide="scissors" class="w-3.5 h-3.5"></i>
+                        <span>Ended Reason : <strong id="modal-ended-reason">Carrier disconnected</strong></span>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-slate-700">
+                        <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <span>Duration : <strong id="modal-duration">1m 24s (22/07/2026 13:45 - 22/07/2026 13:47)</strong></span>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-md font-semibold">
+                        <i data-lucide="coins" class="w-3.5 h-3.5"></i>
+                        <span>Credits : <strong id="modal-credits">33.84</strong></span>
+                    </div>
+                </div>
+
+                <!-- Stereo Dual-Track Visualizer Player -->
+                <div class="p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs flex items-center space-x-4">
+                    <button id="modal-play-btn" onclick="toggleAudioPlayback()" class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 transition">
+                        <i data-lucide="play" id="modal-play-icon" class="w-5 h-5 fill-current ml-0.5"></i>
+                    </button>
+
+                    <!-- Stereo Visualizer Track -->
+                    <div class="flex-1 space-y-1.5 relative cursor-pointer" onclick="seekAudio(event)">
+                        <!-- Top Wave: Agent (Orange) -->
+                        <div class="h-6 flex items-center space-x-0.5 overflow-hidden">
+                            <span class="text-[9px] font-mono text-amber-600 font-bold w-12 shrink-0">Agent</span>
+                            <div class="flex-1 flex items-center space-x-[2px] h-full" id="agent-waveform">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Playhead Line -->
+                        <div class="w-full h-[1px] bg-slate-200 relative">
+                            <div id="playhead-marker" class="absolute top-[-12px] bottom-[-12px] left-[25%] w-[2px] bg-indigo-600 z-10 transition-all duration-100"></div>
+                        </div>
+
+                        <!-- Bottom Wave: User (Green) -->
+                        <div class="h-6 flex items-center space-x-0.5 overflow-hidden">
+                            <span class="text-[9px] font-mono text-emerald-600 font-bold w-12 shrink-0">User</span>
+                            <div class="flex-1 flex items-center space-x-[2px] h-full" id="user-waveform">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right font-mono text-xs shrink-0 space-y-1">
+                        <div class="text-slate-800 font-bold" id="modal-audio-time">00:21 / 01:24</div>
+                        <button onclick="showToast('Downloading WAV audio recording...')" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold flex items-center justify-end gap-1">
+                            <i data-lucide="download" class="w-3 h-3"></i>
+                            <span>Recording</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex border-b border-slate-200/80 bg-white text-xs font-mono px-4 space-x-6 overflow-x-auto custom-scrollbar">
+                <button onclick="switchLogModalTab('transcript')" id="modal-tab-btn-transcript" class="py-3 text-slate-500 hover:text-indigo-600 log-modal-tab-active flex items-center gap-2 shrink-0">
+                    <i data-lucide="align-left" class="w-4 h-4"></i>
+                    <span>Transcripts</span>
+                </button>
+                <button onclick="switchLogModalTab('logs')" id="modal-tab-btn-logs" class="py-3 text-slate-500 hover:text-indigo-600 flex items-center gap-2 shrink-0">
+                    <i data-lucide="list-tree" class="w-4 h-4"></i>
+                    <span>Logs</span>
+                </button>
+                <button onclick="switchLogModalTab('structured')" id="modal-tab-btn-structured" class="py-3 text-slate-500 hover:text-indigo-600 flex items-center gap-2 shrink-0">
+                    <i data-lucide="braces" class="w-4 h-4"></i>
+                    <span>Structured Outputs</span>
+                </button>
+                <button onclick="switchLogModalTab('messages')" id="modal-tab-btn-messages" class="py-3 text-slate-500 hover:text-indigo-600 flex items-center gap-2 shrink-0">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                    <span>Messages</span>
+                </button>
+                <button onclick="switchLogModalTab('latency')" id="modal-tab-btn-latency" class="py-3 text-slate-500 hover:text-indigo-600 flex items-center gap-2 shrink-0">
+                    <i data-lucide="timer" class="w-4 h-4"></i>
+                    <span>Latency Summary</span>
+                </button>
+                <button onclick="switchLogModalTab('cost')" id="modal-tab-btn-cost" class="py-3 text-slate-500 hover:text-indigo-600 flex items-center gap-2 shrink-0">
+                    <i data-lucide="pie-chart" class="w-4 h-4"></i>
+                    <span>Call Cost</span>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-1 text-xs font-mono bg-slate-50/40">
+                
+                <!-- TAB 1: TRANSCRIPTS -->
+                <div id="modal-tab-transcript" class="space-y-4">
+                    <div id="modal-transcript-feed" class="space-y-4 max-w-3xl mx-auto">
+                        <!-- Chat turns inserted dynamically -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: LOGS -->
+                <div id="modal-tab-logs" class="hidden space-y-4">
+                    <div class="flex items-center justify-between gap-4 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs">
+                        <div class="flex items-center space-x-3">
+                            <select class="bg-slate-50 border border-slate-300 text-slate-700 rounded-lg px-2.5 py-1 text-xs font-sans">
+                                <option>All Level</option>
+                                <option>Info</option>
+                                <option>Debug</option>
+                                <option>Error</option>
+                            </select>
+                            <select class="bg-slate-50 border border-slate-300 text-slate-700 rounded-lg px-2.5 py-1 text-xs font-sans">
+                                <option>All Categories</option>
+                                <option>Telephony</option>
+                                <option>Call</option>
+                                <option>LLM</option>
+                            </select>
+                        </div>
+                        <button onclick="showToast('Exported Telemetry Event Logs')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-300 transition flex items-center gap-1.5 font-sans font-semibold">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Export Logs</span>
+                        </button>
+                    </div>
+
+                    <div class="space-y-2" id="modal-logs-list">
+                        <!-- Event logs inserted dynamically -->
+                    </div>
+                </div>
+
+                <!-- TAB 3: STRUCTURED OUTPUTS -->
+                <div id="modal-tab-structured" class="hidden space-y-3">
+                    <div class="text-slate-600 font-sans mb-2">Structured Output extracted based on conversation logic &amp; CRM schemas:</div>
+                    <pre id="modal-json-payload" class="p-4 bg-white border border-slate-200 text-indigo-900 rounded-xl overflow-x-auto text-[11px] leading-relaxed shadow-xs font-mono"></pre>
+                </div>
+
+                <!-- TAB 4: MESSAGES -->
+                <div id="modal-tab-messages" class="hidden space-y-4">
+                    <div class="text-slate-600 font-sans mb-2">Low-level turn message debug traces &amp; tool invocations:</div>
+                    <div class="space-y-3" id="modal-raw-messages-list">
+                        <!-- Raw messages formatted as JSON cards -->
+                    </div>
+                </div>
+
+                <!-- TAB 5: LATENCY SUMMARY -->
+                <div id="modal-tab-latency" class="hidden space-y-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans">
+                        <div class="p-3 bg-white border border-slate-200/80 rounded-xl text-center shadow-xs">
+                            <span class="text-purple-600 font-extrabold text-lg block" id="lat-turns">4</span>
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold">Turns</span>
+                        </div>
+                        <div class="p-3 bg-white border border-slate-200/80 rounded-xl text-center shadow-xs">
+                            <span class="text-indigo-600 font-extrabold text-lg block" id="lat-avg">1.1s</span>
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold">Average Latency</span>
+                        </div>
+                        <div class="p-3 bg-white border border-slate-200/80 rounded-xl text-center shadow-xs">
+                            <span class="text-emerald-600 font-extrabold text-lg block" id="lat-min">0.9s</span>
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold">Min Latency</span>
+                        </div>
+                        <div class="p-3 bg-white border border-slate-200/80 rounded-xl text-center shadow-xs">
+                            <span class="text-rose-600 font-extrabold text-lg block" id="lat-max">1.3s</span>
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold">Max Latency</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans">
+                        <div class="p-3 bg-slate-100/80 border border-slate-200/80 rounded-xl text-center">
+                            <span class="text-emerald-600 font-bold text-sm block">1.0s</span>
+                            <span class="text-[10px] text-slate-500">Speech-to-Text (STT)</span>
+                        </div>
+                        <div class="p-3 bg-slate-100/80 border border-slate-200/80 rounded-xl text-center">
+                            <span class="text-emerald-600 font-bold text-sm block">0.8s</span>
+                            <span class="text-[10px] text-slate-500">LLM Processing</span>
+                        </div>
+                        <div class="p-3 bg-slate-100/80 border border-slate-200/80 rounded-xl text-center">
+                            <span class="text-emerald-600 font-bold text-sm block">0s</span>
+                            <span class="text-[10px] text-slate-500">Text-to-Speech (TTS)</span>
+                        </div>
+                        <div class="p-3 bg-slate-100/80 border border-slate-200/80 rounded-xl text-center">
+                            <span class="text-emerald-600 font-bold text-sm block">0.0s</span>
+                            <span class="text-[10px] text-slate-500">Endpointing</span>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-xs">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-100/80 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase">
+                                <tr>
+                                    <th class="p-3">Turn</th>
+                                    <th class="p-3">User Input Length</th>
+                                    <th class="p-3">STT</th>
+                                    <th class="p-3">LLM</th>
+                                    <th class="p-3">TTS</th>
+                                    <th class="p-3">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-mono text-slate-700" id="latency-table-body">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 6: CALL COST -->
+                <div id="modal-tab-cost" class="hidden space-y-6 font-sans">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs">
+                        <div class="text-center md:border-r border-slate-200/80 p-2">
+                            <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+                                <canvas id="modalCostDonut"></canvas>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span class="font-extrabold text-slate-900 text-base" id="modal-cost-donut-total">33.84</span>
+                                    <span class="text-[8px] text-slate-500 uppercase font-mono font-bold">Total Credits</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2 space-y-2 text-xs font-mono">
+                            <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                                <span class="flex items-center gap-2 font-semibold text-slate-700"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Transcriber (STT)</span>
+                                <span class="text-slate-900 font-bold">0.00 (0.00%)</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                                <span class="flex items-center gap-2 font-semibold text-slate-700"><span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Model (LLM)</span>
+                                <span class="text-slate-900 font-bold">2.63 (7.78%)</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                                <span class="flex items-center gap-2 font-semibold text-slate-700"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Voice (TTS)</span>
+                                <span class="text-slate-900 font-bold">31.00 (91.61%)</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                                <span class="flex items-center gap-2 font-semibold text-slate-700"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Structured Output</span>
+                                <span class="text-slate-900 font-bold">0.20 (0.60%)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                        <div class="p-3.5 bg-white border border-slate-200/80 rounded-xl space-y-2 shadow-xs">
+                            <div class="flex justify-between items-center text-slate-500">
+                                <span class="font-bold text-slate-900">Transcriber</span>
+                                <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">0.00%</span>
+                            </div>
+                            <div class="text-xl font-bold text-slate-900">0.00</div>
+                            <div class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-100 font-mono">
+                                <div>Provider: <strong class="text-slate-800">deepgram</strong></div>
+                                <div>Model: <strong class="text-slate-800">flux-general-multi</strong></div>
+                                <div>Duration: <strong class="text-slate-800">1m 1s</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-white border border-slate-200/80 rounded-xl space-y-2 shadow-xs">
+                            <div class="flex justify-between items-center text-slate-500">
+                                <span class="font-bold text-slate-900">Model</span>
+                                <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-1.5 py-0.5 rounded">7.78%</span>
+                            </div>
+                            <div class="text-xl font-bold text-purple-600">2.63</div>
+                            <div class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-100 font-mono">
+                                <div>Provider: <strong class="text-slate-800">openai</strong></div>
+                                <div>Model: <strong class="text-slate-800">gpt-4o-mini</strong></div>
+                                <div>Input tokens: <strong class="text-slate-800">1,441</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-white border border-slate-200/80 rounded-xl space-y-2 shadow-xs">
+                            <div class="flex justify-between items-center text-slate-500">
+                                <span class="font-bold text-slate-900">Voice</span>
+                                <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-1.5 py-0.5 rounded">91.61%</span>
+                            </div>
+                            <div class="text-xl font-bold text-emerald-600">31.00</div>
+                            <div class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-100 font-mono">
+                                <div>Provider: <strong class="text-slate-800">elevenlabs</strong></div>
+                                <div>Model: <strong class="text-slate-800">eleven_turbo_v2_5</strong></div>
+                                <div>Characters: <strong class="text-slate-800">620</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-white border border-slate-200/80 rounded-xl space-y-2 shadow-xs">
+                            <div class="flex justify-between items-center text-slate-500">
+                                <span class="font-bold text-slate-900">Structured Output</span>
+                                <span class="text-[10px] bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded">0.60%</span>
+                            </div>
+                            <div class="text-xl font-bold text-amber-600">0.20</div>
+                            <div class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-100 font-mono">
+                                <div>Provider: <strong class="text-slate-800">openai</strong></div>
+                                <div>Model: <strong class="text-slate-800">gpt-4o-mini</strong></div>
+                                <div>Output tokens: <strong class="text-slate-800">113</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <script>
+        let currentModalCall = null;
+        let isAudioPlaying = false;
+        let playheadInterval = null;
+        let currentPlayheadPercent = 25;
+        let modalDonutChartInstance = null;
+
+        // Call Logs Data
+        const callLogsData = [
+            {
+                id: 8941,
+                cli: "+91 98401 23456",
+                hotline: "+91 73059 63580 (GRO)",
+                intent: "Ticket Status Inquiry",
+                outcome: "Bot Resolved",
+                sentiment: "Positive (+0.82)",
+                latency: "1.1s",
+                endedReason: "Customer satisfied & closed",
+                duration: "1m 14s",
+                credits: "28.50",
+                transcript: [
+                    { speaker: 'BOT', text: 'Thank you for calling Customer Support. Your registered number ending 3456 is verified. Please say or enter your 4-digit MPIN.' },
+                    { speaker: 'USER', text: '1 2 3 4' },
+                    { speaker: 'BOT', text: 'MPIN authenticated successfully. Your open ticket #INC-4412 status is Under Investigation. Created 3 days ago. Expected resolution by tomorrow.' },
+                    { speaker: 'USER', text: 'Okay thank you, that is helpful.' },
+                    { speaker: 'BOT', text: 'Is your issue resolved or do you need further assistance?' },
+                    { speaker: 'USER', text: 'No that is all, thank you.' },
+                    { speaker: 'BOT', text: 'Thank you for calling. Have a great day!' }
+                ],
+                json: {
+                    ticket_id: "INC-4412",
+                    ticket_age_days: 3,
+                    customer_name: "Anand Subramanian",
+                    status: "Under Investigation",
+                    escalation_flag: false,
+                    closure_confirmed: true
+                }
+            },
+            {
+                id: 8942,
+                cli: "+91 97100 88210",
+                hotline: "+91 78456 39629 (Nodal)",
+                intent: "Escalated Complaint Check",
+                outcome: "Nodal Escalation",
+                sentiment: "Negative (-0.64)",
+                latency: "1.4s",
+                endedReason: "Escalated to Nodal Officer Desk",
+                duration: "1m 45s",
+                credits: "42.10",
+                transcript: [
+                    { speaker: 'BOT', text: 'Welcome to Nodal Support. Verifying MPIN for CLI ending 8210.' },
+                    { speaker: 'USER', text: '8 8 2 1' },
+                    { speaker: 'BOT', text: 'MPIN verified. Ticket #GRO-8810 is 16 days old (exceeds SLA threshold). Transferring your call directly to the Appellate Nodal Desk.' },
+                    { speaker: 'USER', text: 'Yes, connect me immediately.' },
+                    { speaker: 'BOT', text: 'Connecting you now to the Nodal Desk. Please stay on the line.' }
+                ],
+                json: {
+                    ticket_id: "GRO-8810",
+                    ticket_age_days: 16,
+                    customer_name: "Meenakshi Sundaram",
+                    status: "Pending Nodal Review",
+                    escalation_flag: true,
+                    target_desk: "Nodal Officer"
+                }
+            },
+            {
+                id: 8943,
+                cli: "+91 98840 11223",
+                hotline: "+91 1800 200 1122 (Frontline)",
+                intent: "Service Request Inquiry",
+                outcome: "Agent Transfer",
+                sentiment: "Neutral (0.00)",
+                latency: "0.9s",
+                endedReason: "Transferred to Agent Queue",
+                duration: "0m 52s",
+                credits: "18.30",
+                transcript: [
+                    { speaker: 'BOT', text: 'Welcome. No active complaints found for your account.' },
+                    { speaker: 'USER', text: 'I want to apply for a new loan service request.' },
+                    { speaker: 'BOT', text: 'I am transferring you to a customer care executive for new service requests.' }
+                ],
+                json: {
+                    ticket_id: null,
+                    customer_name: "Priya Sharma",
+                    intent: "New Service Request",
+                    transferred: true
+                }
+            },
+            {
+                id: 8944,
+                cli: "+91 99402 77334",
+                hotline: "+91 73059 63580 (GRO)",
+                intent: "Forgot MPIN Reset",
+                outcome: "Bot Resolved",
+                sentiment: "Positive (+0.75)",
+                latency: "1.0s",
+                endedReason: "MPIN Reset Completed",
+                duration: "2m 05s",
+                credits: "38.90",
+                transcript: [
+                    { speaker: 'BOT', text: 'Your MPIN is not set. Sending OTP to registered mobile number.' },
+                    { speaker: 'USER', text: '5 4 3 2' },
+                    { speaker: 'BOT', text: 'OTP verified. Please state your new 4-digit MPIN.' },
+                    { speaker: 'USER', text: '9 0 8 1' },
+                    { speaker: 'BOT', text: 'New MPIN saved successfully. You are now authenticated.' }
+                ],
+                json: {
+                    mpin_reset: true,
+                    otp_verified: true,
+                    customer_name: "Karthik Raja"
+                }
+            },
+            {
+                id: 8945,
+                cli: "+91 94440 99887",
+                hotline: "+91 78456 39629 (Nodal)",
+                intent: "After Business Hours Call",
+                outcome: "GRO Desk Transfer",
+                sentiment: "Neutral (+0.10)",
+                latency: "1.2s",
+                endedReason: "Callback Scheduled",
+                duration: "1m 08s",
+                credits: "22.40",
+                transcript: [
+                    { speaker: 'BOT', text: 'Thank you for calling. Our operating hours are 9:30 AM to 6:00 PM. Would you like to schedule a callback?' },
+                    { speaker: 'USER', text: 'Yes, please callback tomorrow.' },
+                    { speaker: 'BOT', text: 'Your callback request for tomorrow morning has been registered in CRM.' }
+                ],
+                json: {
+                    after_hours: true,
+                    callback_scheduled: true,
+                    callback_time: "Next Business Day 10:00 AM"
+                }
+            }
+        ];
+
+        const voicePromptsData = [
+            { id: 1, title: "Welcome Greeting", category: "Call Initiation", lang: "English", text: "Thank you for contacting Support Services. Welcome to the Nodal Officer & Grievance support system." },
+            { id: 2, title: "Language Choice", category: "Language Selection", lang: "English", text: "Please tell us your preferred language. You may say English, Tamil, or Hindi." },
+            { id: 3, title: "Language Confirmation", category: "Language Selection", lang: "English", text: "You have selected English. Let us continue." },
+            { id: 4, title: "CLI Confirmation", category: "Mobile Capture", lang: "English", text: "You are calling from your registered mobile number ending with 3456." },
+            { id: 5, title: "Mobile Entry Prompt", category: "Mobile Capture", lang: "English", text: "Please say or enter your registered mobile number." },
+            { id: 6, title: "Invalid Mobile", category: "Mobile Capture", lang: "English", text: "The mobile number entered is invalid. Please try again." },
+            { id: 7, title: "MPIN Entry", category: "Authentication", lang: "English", text: "Please say or enter your four-digit MPIN." },
+            { id: 8, title: "Incorrect MPIN Retry", category: "Authentication", lang: "English", text: "The MPIN entered is incorrect. Please try again." },
+            { id: 9, title: "MPIN Max Retries Exceeded", category: "Authentication", lang: "English", text: "Authentication failed due to multiple incorrect attempts." },
+            { id: 10, title: "Agent Transfer Notice", category: "Routing", lang: "English", text: "Connecting you to a customer care executive for assistance." },
+            { id: 11, title: "MPIN Not Set", category: "Authentication", lang: "English", text: "Your MPIN is not set. I will help you create one now." },
+            { id: 12, title: "OTP Sent Notification", category: "Authentication", lang: "English", text: "An OTP has been sent to your registered mobile number." },
+            { id: 13, title: "OTP Entry Prompt", category: "Authentication", lang: "English", text: "Please say or enter the OTP." },
+            { id: 14, title: "Invalid OTP", category: "Authentication", lang: "English", text: "The OTP entered is incorrect. Please try again." },
+            { id: 15, title: "Create MPIN Prompt", category: "Authentication", lang: "English", text: "Please say your new four-digit MPIN." },
+            { id: 16, title: "Confirm MPIN Prompt", category: "Authentication", lang: "English", text: "Please repeat the MPIN to confirm." },
+            { id: 17, title: "MPIN Success", category: "Authentication", lang: "English", text: "Thank you. Your MPIN has been successfully generated." },
+            { id: 18, title: "Multiple Agreements", category: "Validation", lang: "English", text: "Multiple agreement numbers are linked to your Mobile Number." },
+            { id: 19, title: "Fetching Ticket", category: "CRM Lookup", lang: "English", text: "Please wait while I fetch your account and complaint details." },
+            { id: 20, title: "Ticket Status Update", category: "Ticket Status", lang: "English", text: "Your complaint number is INC-4412. Current status is Under Investigation." },
+            { id: 21, title: "Resolution Details", category: "Ticket Status", lang: "English", text: "Here is what we have done so far for your complaint." },
+            { id: 22, title: "Next Steps SLA", category: "Ticket Status", lang: "English", text: "We expect to complete the next resolution step by tomorrow." },
+            { id: 23, title: "No Active Ticket Found", category: "Ticket Status", lang: "English", text: "We could not find any active complaints for your agreement number." },
+            { id: 24, title: "Service Queue Transfer", category: "Routing", lang: "English", text: "Connecting you to general customer service support." },
+            { id: 25, title: "Additional Help Query", category: "Confirmation", lang: "English", text: "Do you need any more help? Please say Yes or No." },
+            { id: 26, title: "Satisfaction Check", category: "CSAT Capture", lang: "English", text: "Is your complaint resolved to your satisfaction? Say Yes or No." },
+            { id: 27, title: "Ticket Closure Confirmed", category: "Closure", lang: "English", text: "Thank you. Your complaint has been marked as closed." },
+            { id: 28, title: "Closure SMS Notification", category: "Closure", lang: "English", text: "You will receive an SMS confirmation shortly." },
+            { id: 29, title: "Dissatisfaction Acknowledged", category: "CSAT Capture", lang: "English", text: "I am sorry that this has not resolved your issue." },
+            { id: 30, title: "GRO/Nodal Escalation", category: "Routing", lang: "English", text: "Connecting your call directly to our Grievance Redressal Desk." },
+            { id: 31, title: "After-Hours Notice", category: "After Hours", lang: "English", text: "Our working hours are 9:30 AM to 6:00 PM." },
+            { id: 32, title: "Limited Support Notice", category: "After Hours", lang: "English", text: "I can check your ticket status or register a callback." },
+            { id: 33, title: "Callback Option Prompt", category: "After Hours", lang: "English", text: "Would you like us to call you back during business hours?" },
+            { id: 34, title: "Callback Confirmed", category: "After Hours", lang: "English", text: "Your callback request is confirmed. Our team will call you tomorrow." },
+            { id: 35, title: "Thank You Closing", category: "Call Closure", lang: "English", text: "Thank you for contacting Nodal Officer support." },
+            { id: 36, title: "Goodbye Message", category: "Call Closure", lang: "English", text: "Have a nice day. Goodbye." }
+        ];
+
+        window.onload = function() {
+            lucide.createIcons();
+            initCharts();
+            renderCallLogsTable(callLogsData);
+            renderPromptsList(voicePromptsData);
+        };
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function switchTab(tabId, filterValue = null) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-tab'));
+            
+            const activeTabEl = document.getElementById(`tab-${tabId}`);
+            if (activeTabEl) activeTabEl.classList.remove('hidden');
+
+            const activeNavBtn = document.getElementById(`nav-${tabId}`);
+            if (activeNavBtn) activeNavBtn.classList.add('active-tab');
+
+            if (tabId === 'logs' && filterValue) {
+                const outcomeFilter = document.getElementById('log-outcome-filter');
+                if (filterValue === 'bot_resolved') outcomeFilter.value = 'Bot Resolved';
+                else if (filterValue === 'fcr') outcomeFilter.value = 'all';
+                else if (filterValue === 'sentiment') outcomeFilter.value = 'all';
+                filterCallLogs();
+            }
+        }
+
+        let volumeChartInstance = null;
+        let outcomeChartInstance = null;
+
+        function initCharts() {
+            const ctxVolume = document.getElementById('callVolumeChart');
+            if (ctxVolume) {
+                if (volumeChartInstance) volumeChartInstance.destroy();
+                volumeChartInstance = new Chart(ctxVolume, {
+                    type: 'bar',
+                    data: {
+                        labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+                        datasets: [
+                            { label: 'Bot Automated Resolved', data: [45, 110, 160, 140, 95, 130, 180, 150, 110, 60], backgroundColor: '#6366f1', borderRadius: 4 },
+                            { label: 'Agent Transfer', data: [12, 25, 30, 22, 15, 20, 35, 28, 18, 10], backgroundColor: '#a855f7', borderRadius: 4 },
+                            { label: 'GRO / Nodal Escalation', data: [5, 12, 18, 14, 8, 10, 22, 16, 12, 4], backgroundColor: '#f59e0b', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#475569', font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } } } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } },
+                            y: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b', font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+
+            const ctxOutcome = document.getElementById('outcomeChart');
+            if (ctxOutcome) {
+                if (outcomeChartInstance) outcomeChartInstance.destroy();
+                outcomeChartInstance = new Chart(ctxOutcome, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Bot Resolved', 'Agent Desk', 'GRO Desk', 'Nodal Desk'],
+                        datasets: [{
+                            data: [62, 18, 12, 8],
+                            backgroundColor: ['#10b981', '#6366f1', '#f59e0b', '#a855f7'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        cutout: '75%'
+                    }
+                });
+            }
+        }
+
+        function renderCallLogsTable(logs) {
+            const tbody = document.getElementById('call-logs-table-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = logs.map(log => `
+                <tr class="hover:bg-slate-100/60 transition">
+                    <td class="p-3.5">
+                        <div class="font-bold text-slate-900">Call #${log.id}</div>
+                        <div class="text-[10px] text-slate-500">${log.cli}</div>
+                    </td>
+                    <td class="p-3.5 text-slate-700">${log.hotline}</td>
+                    <td class="p-3.5 text-indigo-700 font-semibold">${log.intent}</td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${
+                            log.outcome.includes('Bot') ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                            log.outcome.includes('Nodal') ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                            'bg-amber-100 text-amber-800 border border-amber-300'
+                        }">
+                            ${log.outcome}
+                        </span>
+                    </td>
+                    <td class="p-3.5 sentiment-col">
+                        <span class="${log.sentiment.includes('Positive') ? 'text-emerald-600' : log.sentiment.includes('Negative') ? 'text-rose-600' : 'text-slate-500'} font-bold">
+                            ${log.sentiment}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-slate-800 font-bold">${log.latency}</td>
+                    <td class="p-3.5 text-right">
+                        <button onclick="openLogModal(${log.id})" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-sans font-semibold rounded-lg text-[11px] transition shadow-xs">
+                            Inspect Audit
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('log-count-text').textContent = `Showing ${logs.length} Call Records`;
+        }
+
+        function filterCallLogs() {
+            const query = document.getElementById('log-search').value.toLowerCase();
+            const outcome = document.getElementById('log-outcome-filter').value;
+
+            const filtered = callLogsData.filter(log => {
+                const matchesSearch = log.cli.toLowerCase().includes(query) || 
+                                      log.id.toString().includes(query) || 
+                                      (log.json.ticket_id && log.json.ticket_id.toLowerCase().includes(query));
+                const matchesOutcome = (outcome === 'all') || (log.outcome === outcome);
+                return matchesSearch && matchesOutcome;
+            });
+
+            renderCallLogsTable(filtered);
+        }
+
+        function toggleSentimentColumn(checked) {
+            document.querySelectorAll('.sentiment-col').forEach(el => {
+                el.style.display = checked ? '' : 'none';
+            });
+        }
+
+        function copyCallId() {
+            const uuid = document.getElementById('modal-call-uuid').textContent;
+            navigator.clipboard ? navigator.clipboard.writeText(uuid) : document.execCommand('copy');
+            showToast("Copied Call ID: " + uuid);
+        }
+
+        function renderWaveforms() {
+            const agentContainer = document.getElementById('agent-waveform');
+            const userContainer = document.getElementById('user-waveform');
+            if (!agentContainer || !userContainer) return;
+
+            agentContainer.innerHTML = '';
+            userContainer.innerHTML = '';
+
+            for (let i = 0; i < 75; i++) {
+                const h1 = Math.floor(Math.random() * 20) + 3;
+                const h2 = Math.floor(Math.random() * 18) + 2;
+                agentContainer.innerHTML += `<span class="bg-amber-500 rounded-full w-[3px]" style="height: ${h1}px;"></span>`;
+                userContainer.innerHTML += `<span class="bg-emerald-500 rounded-full w-[3px]" style="height: ${h2}px;"></span>`;
+            }
+        }
+
+        function toggleAudioPlayback() {
+            isAudioPlaying = !isAudioPlaying;
+            const icon = document.getElementById('modal-play-icon');
+            const marker = document.getElementById('playhead-marker');
+
+            if (isAudioPlaying) {
+                icon.setAttribute('data-lucide', 'pause');
+                showToast("Playing call audio recording stream...");
+                
+                playheadInterval = setInterval(() => {
+                    currentPlayheadPercent = (currentPlayheadPercent + 1) % 100;
+                    if (marker) marker.style.left = `${currentPlayheadPercent}%`;
+                }, 200);
+            } else {
+                icon.setAttribute('data-lucide', 'play');
+                if (playheadInterval) clearInterval(playheadInterval);
+            }
+            lucide.createIcons();
+        }
+
+        function seekAudio(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            currentPlayheadPercent = Math.floor((clickX / rect.width) * 100);
+            const marker = document.getElementById('playhead-marker');
+            if (marker) marker.style.left = `${currentPlayheadPercent}%`;
+        }
+
+        function openLogModal(callId) {
+            const log = callLogsData.find(l => l.id === callId) || callLogsData[0];
+            currentModalCall = log;
+
+            document.getElementById('modal-call-uuid').textContent = `f5daa2c34bf4488b9df0764119a74d96-${log.id}`;
+            document.getElementById('modal-ended-reason').textContent = log.endedReason;
+            document.getElementById('modal-duration').textContent = `${log.duration} (22/07/2026 13:45 - 22/07/2026 13:47)`;
+            document.getElementById('modal-credits').textContent = log.credits;
+            document.getElementById('modal-cost-donut-total').textContent = log.credits;
+
+            renderWaveforms();
+
+            // Transcripts
+            const feed = document.getElementById('modal-transcript-feed');
+            feed.innerHTML = log.transcript.map((turn, idx) => {
+                const isAgent = turn.speaker === 'BOT' || turn.speaker === 'AGENT';
+                return `
+                    <div class="flex flex-col ${isAgent ? 'items-start' : 'items-end'} space-y-1">
+                        <div class="text-[10px] text-slate-500 font-bold px-1 flex items-center gap-2">
+                            <span class="${isAgent ? 'text-indigo-600' : 'text-slate-700'}">${isAgent ? 'Agent' : 'User'}</span>
+                            <span class="text-slate-400 font-mono">13:45:${(7 + idx*3).toString().padStart(2, '0')} (+00:00:${(24 + idx*2).toString().padStart(2, '0')})</span>
+                        </div>
+                        <div class="${isAgent ? 'bg-indigo-50/80 border border-indigo-100 text-slate-800 rounded-2xl rounded-tl-none' : 'bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tr-none'} p-3.5 max-w-[85%] text-xs shadow-xs font-sans leading-relaxed">
+                            ${turn.text}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Logs
+            const logsList = document.getElementById('modal-logs-list');
+            const sampleLogs = [
+                { time: '13:44:47', title: 'Ringing', level: 'Info', cat: 'Telephony' },
+                { time: '13:44:59', title: 'Provider Call SID Attached', level: 'Debug', cat: 'Telephony' },
+                { time: '13:44:59', title: 'Dialing', level: 'Info', cat: 'Telephony' },
+                { time: '13:44:59', title: 'Call Queued', level: 'Info', cat: 'Call' },
+                { time: '13:44:59', title: 'Transport Connected', level: 'Info', cat: 'Call' },
+                { time: '13:44:59', title: 'Call Started', level: 'Info', cat: 'Call' },
+                { time: '13:44:59', title: 'Participant Joined', level: 'Info', cat: 'Call' }
+            ];
+            logsList.innerHTML = sampleLogs.map(item => `
+                <div class="p-3 bg-white border border-slate-200/80 rounded-xl flex items-center justify-between hover:bg-slate-50 transition shadow-xs">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+                        <span class="font-bold text-slate-800 font-sans">${item.title}</span>
+                        <span class="px-2 py-0.5 text-[9px] bg-indigo-100 text-indigo-700 font-bold rounded border border-indigo-200">${item.level}</span>
+                        <span class="px-2 py-0.5 text-[9px] bg-purple-100 text-purple-700 font-bold rounded border border-purple-200">${item.cat}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-500 font-mono">${item.time}</span>
+                </div>
+            `).join('');
+
+            // Structured JSON
+            document.getElementById('modal-json-payload').textContent = JSON.stringify({
+                "structured_output": [
+                    {
+                        "id": `9d935a7b-dc0d-46c3-8f0c-${log.id}`,
+                        "name": "Customer Support Inbound",
+                        "input_type": "ai",
+                        "schema_type": "object",
+                        "status": "success",
+                        "result": {
+                            "Call_Disposition": log.outcome,
+                            "Summary": `Customer requested updates for ticket status. Identified intent: ${log.intent}`,
+                            "work_order_id": log.json.ticket_id || "INC-4412",
+                            "customer_cli": log.cli,
+                            "sentiment": log.sentiment,
+                            "escalation_recommended": log.outcome.includes('Nodal')
+                        },
+                        "model": "gpt-4o-mini",
+                        "provider": "openai"
+                    }
+                ]
+            }, null, 2);
+
+            // Messages
+            const msgsList = document.getElementById('modal-raw-messages-list');
+            msgsList.innerHTML = log.transcript.map((t, idx) => `
+                <div class="p-3 bg-white border border-slate-200/80 rounded-xl space-y-1 shadow-xs">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-bold border-b border-slate-100 pb-1">
+                        <span>Message ${idx + 1} (${t.speaker})</span>
+                        <span>13:46:${16 + idx}</span>
+                    </div>
+                    <pre class="text-slate-800 text-[10px] pt-1 overflow-x-auto font-mono">${JSON.stringify({
+                        role: t.speaker === 'BOT' ? 'agent' : 'user',
+                        content: t.text,
+                        time_ms: 1784708176484 + (idx*1000),
+                        seconds_from_start: 23.71 + (idx*3),
+                        source: idx === 0 ? "greeting" : "conversation",
+                        tool_calls: []
+                    }, null, 2)}</pre>
+                </div>
+            `).join('');
+
+            // Latency Table
+            const latTable = document.getElementById('latency-table-body');
+            latTable.innerHTML = log.transcript.map((t, idx) => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900">${idx + 1}</td>
+                    <td class="p-3 text-slate-700 truncate max-w-[200px] font-sans">${t.text} (${t.text.length})</td>
+                    <td class="p-3 text-indigo-600 font-bold">0.3s</td>
+                    <td class="p-3 text-purple-600 font-bold">0.8s</td>
+                    <td class="p-3 text-emerald-600 font-bold">0s</td>
+                    <td class="p-3 text-slate-900 font-bold">${log.latency}</td>
+                </tr>
+            `).join('');
+
+            switchLogModalTab('transcript');
+            document.getElementById('log-modal').classList.remove('hidden');
+
+            setTimeout(initModalDonutChart, 100);
+        }
+
+        function initModalDonutChart() {
+            const ctx = document.getElementById('modalCostDonut');
+            if (!ctx) return;
+            if (modalDonutChartInstance) modalDonutChartInstance.destroy();
+
+            modalDonutChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['STT', 'LLM', 'Voice TTS', 'Structured Output'],
+                    datasets: [{
+                        data: [0, 7.78, 91.61, 0.60],
+                        backgroundColor: ['#3b82f6', '#a855f7', '#10b981', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '78%'
+                }
+            });
+        }
+
+        function closeLogModal() {
+            if (isAudioPlaying) toggleAudioPlayback();
+            document.getElementById('log-modal').classList.add('hidden');
+        }
+
+        function switchLogModalTab(tabName) {
+            ['transcript', 'logs', 'structured', 'messages', 'latency', 'cost'].forEach(t => {
+                const pane = document.getElementById(`modal-tab-${t}`);
+                if (pane) pane.classList.add('hidden');
+                const btn = document.getElementById(`modal-tab-btn-${t}`);
+                if (btn) btn.classList.remove('log-modal-tab-active');
+            });
+
+            const activePane = document.getElementById(`modal-tab-${tabName}`);
+            if (activePane) activePane.classList.remove('hidden');
+            const activeBtn = document.getElementById(`modal-tab-btn-${tabName}`);
+            if (activeBtn) activeBtn.classList.add('log-modal-tab-active');
+
+            if (tabName === 'cost') setTimeout(initModalDonutChart, 50);
+        }
+
+        let simStep = 0;
+        let activeScenario = 'scenario_1';
+
+        function loadScenario(val) {
+            activeScenario = val;
+            resetSimulator();
+        }
+
+        function resetSimulator() {
+            simStep = 0;
+            const feed = document.getElementById('transcript-feed');
+            feed.innerHTML = `<div class="text-center text-xs text-slate-400 my-12 font-mono">--- Voice Call Stream Logs ---</div>`;
+            document.getElementById('sim-status-title').textContent = "Line Standby";
+            document.getElementById('sim-status-sub').textContent = "Select scenario & press 'Start Call Simulation'";
+            document.getElementById('call-status-indicator').className = "w-3 h-3 rounded-full bg-slate-400";
+            
+            document.getElementById('interactive-actions').innerHTML = `
+                <button disabled class="opacity-50 px-3 py-1.5 bg-slate-200 text-slate-500 rounded-xl text-xs cursor-not-allowed font-mono">
+                    Start call to activate options
+                </button>
+            `;
+        }
+
+        function startSimulatedCall() {
+            resetSimulator();
+            document.getElementById('sim-status-title').textContent = "Call Active (Inbound Connected)";
+            document.getElementById('sim-status-sub').textContent = "Voice engine analyzing intent...";
+            document.getElementById('call-status-indicator').className = "w-3 h-3 rounded-full bg-emerald-500 animate-pulse";
+
+            const lang = document.getElementById('sim-lang').value;
+            const cli = document.getElementById('sim-cli').value;
+
+            appendSimTurn('BOT', `Thank you for calling Support Services. You are calling from registered number ${cli}. Please enter your 4-digit MPIN.`);
+            renderSimActions(['Enter MPIN (1234)', 'Forgot MPIN', 'Enter Wrong MPIN (9999)']);
+        }
+
+        function appendSimTurn(speaker, text) {
+            const feed = document.getElementById('transcript-feed');
+            const isBot = speaker === 'BOT';
+            
+            feed.innerHTML += `
+                <div class="flex flex-col ${isBot ? 'items-start' : 'items-end'} space-y-1 my-2">
+                    <span class="text-[10px] text-slate-500 font-bold">${isBot ? '🤖 AI Voice Bot' : '👤 Customer (CLI)'}</span>
+                    <div class="${isBot ? 'bg-white border border-slate-200/80 text-slate-800 shadow-xs' : 'bg-indigo-600 text-white'} p-3 rounded-xl max-w-[90%] text-xs font-mono">
+                        ${text}
+                    </div>
+                </div>
+            `;
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function renderSimActions(options) {
+            const container = document.getElementById('interactive-actions');
+            container.innerHTML = options.map(opt => `
+                <button onclick="handleSimUserAction('${opt}')" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-mono font-semibold transition shadow-xs">
+                    ${opt}
+                </button>
+            `).join('');
+        }
+
+        function handleSimUserAction(actionText) {
+            appendSimTurn('USER', actionText);
+
+            setTimeout(() => {
+                if (actionText.includes('1234')) {
+                    if (activeScenario === 'scenario_1') {
+                        appendSimTurn('BOT', 'MPIN Authenticated. Your open complaint #INC-4412 (Age: 3 days) is Under Investigation. Expected completion: Tomorrow.');
+                        renderSimActions(['Say "Satisfied with info"', 'Request Agent Transfer']);
+                    } else if (activeScenario === 'scenario_2') {
+                        appendSimTurn('BOT', 'MPIN Authenticated. Complaint #GRO-8810 is 16 days old (Exceeds SLA). Escalating your call directly to Appellate Nodal Desk +91 78456 39629.');
+                        renderSimActions(['End Call']);
+                    }
+                } else if (actionText.includes('Forgot MPIN')) {
+                    appendSimTurn('BOT', 'Sending OTP to registered mobile number. Please speak the 4-digit OTP received.');
+                    renderSimActions(['Enter OTP (5432)']);
+                } else if (actionText.includes('5432')) {
+                    appendSimTurn('BOT', 'OTP Verified. Please state your new 4-digit MPIN.');
+                    renderSimActions(['State MPIN (9081)']);
+                } else if (actionText.includes('9081')) {
+                    appendSimTurn('BOT', 'New MPIN created successfully. Authenticated!');
+                    renderSimActions(['Check Complaint Status']);
+                } else if (actionText.includes('Satisfied')) {
+                    appendSimTurn('BOT', 'Thank you for your feedback! Ticket marked as confirmed. Have a nice day.');
+                    renderSimActions(['Call Completed']);
+                } else {
+                    appendSimTurn('BOT', 'Transferring your session to a live customer service representative. Please stay on the line.');
+                    renderSimActions(['Call Completed']);
+                }
+            }, 600);
+        }
+
+        function applyClientPreset(preset) {
+            const h1 = document.getElementById('tier1-hotline');
+            const h2 = document.getElementById('tier2-hotline');
+            const h3 = document.getElementById('tier3-hotline');
+
+            if (preset === 'bfsi') {
+                h1.value = "+91 1800 200 1122";
+                h2.value = "+91 73059 63580";
+                h3.value = "+91 78456 39629";
+            } else if (preset === 'telecom') {
+                h1.value = "+91 1800 120 8899";
+                h2.value = "+91 98400 00112";
+                h3.value = "+91 98400 00113";
+            } else {
+                h1.value = "+91 1800 100 0000";
+                h2.value = "+91 73000 00001";
+                h3.value = "+91 78000 00002";
+            }
+            showToast("Applied " + preset.toUpperCase() + " client preset configuration");
+        }
+
+        function saveRuleset() {
+            showToast("Escalation Engine ruleset successfully saved & deployed!");
+        }
+
+        function saveSettings() {
+            showToast("System settings & reasoning model parameters saved.");
+        }
+
+        function renderPromptsList(prompts) {
+            const list = document.getElementById('prompts-list');
+            if (!list) return;
+
+            list.innerHTML = prompts.map(p => `
+                <div class="p-4 bg-white hover:bg-slate-50 transition flex items-center justify-between text-xs">
+                    <div class="space-y-1 max-w-2xl">
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 font-mono rounded font-bold">Prompt #${p.id}</span>
+                            <span class="font-bold text-slate-900">${p.title}</span>
+                            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 font-mono rounded text-[10px] font-semibold">${p.category}</span>
+                        </div>
+                        <p class="text-slate-600 font-mono text-[11px]">"${p.text}"</p>
+                    </div>
+                    <button onclick="auditionPrompt('${p.text}')" class="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl transition flex items-center gap-1.5 font-mono font-bold shadow-xs">
+                        <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                        <span>Audition</span>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function filterPrompts(lang) {
+            if (lang === 'all') renderPromptsList(voicePromptsData);
+            else renderPromptsList(voicePromptsData.filter(p => p.lang === lang));
+        }
+
+        function auditionPrompt(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(utterance);
+                showToast("Auditioning voice prompt audio synthesis...");
+            } else {
+                showToast("Audio TTS Preview Triggered: " + text.substring(0, 30) + "...");
+            }
+        }
+    </script>
+</body>
+</html>
